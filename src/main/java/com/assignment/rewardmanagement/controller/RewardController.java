@@ -1,6 +1,6 @@
 package com.assignment.rewardmanagement.controller;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -37,8 +37,8 @@ public class RewardController {
     @GetMapping("/{customerId}")
     public ResponseEntity<?> getRewardPoints(
             @PathVariable Integer customerId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         log.info("GET /rewards/{} startDate={} endDate={}", customerId, startDate, endDate);
 
@@ -46,8 +46,15 @@ public class RewardController {
             return ResponseEntity.badRequest().body("Both startDate and endDate must be provided together");
         }
 
+        if (startDate != null && startDate.isAfter(endDate)) {
+            return ResponseEntity.badRequest().body("startDate must not be after endDate");
+        }
+
         if (startDate != null) {
-            return ResponseEntity.ok(rewardService.getRewardPointsForCustomerInRange(customerId, startDate, endDate));
+            return ResponseEntity.ok(rewardService.getRewardPointsForCustomerInRange(
+                    customerId,
+                    startDate.atStartOfDay(),
+                    endDate.atTime(23, 59, 59)));
         }
         return ResponseEntity.ok(rewardService.getRewardPointsForCustomer(customerId));
     }
