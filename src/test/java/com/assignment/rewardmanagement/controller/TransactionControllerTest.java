@@ -33,7 +33,7 @@ class TransactionControllerTest {
     @Test
     void addTransaction_validRequest_returns201() throws Exception {
         TransactionResponse response = new TransactionResponse(
-                101, 1, "Clark", new BigDecimal("120.00"), LocalDateTime.of(2026, 4, 5, 10, 0));
+                101L, 1L, "Clark", new BigDecimal("120.00"), LocalDateTime.of(2026, 4, 5, 10, 0));
         when(transactionService.addTransaction(any())).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/transactions")
@@ -83,10 +83,10 @@ class TransactionControllerTest {
     @Test
     void getTransactionsByCustomer_returns200() throws Exception {
         List<TransactionResponse> transactions = List.of(
-                new TransactionResponse(1, 1, "Clark", new BigDecimal("75.00"), LocalDateTime.of(2026, 4, 5, 10, 0)),
-                new TransactionResponse(2, 1, "Clark", new BigDecimal("120.00"), LocalDateTime.of(2026, 5, 10, 9, 0))
+                new TransactionResponse(1L, 1L, "Clark", new BigDecimal("75.00"), LocalDateTime.of(2026, 4, 5, 10, 0)),
+                new TransactionResponse(2L, 1L, "Clark", new BigDecimal("120.00"), LocalDateTime.of(2026, 5, 10, 9, 0))
         );
-        when(transactionService.getTransactionsByCustomer(1)).thenReturn(transactions);
+        when(transactionService.getTransactionsByCustomer(1L)).thenReturn(transactions);
 
         mockMvc.perform(get("/api/v1/transactions/customer/1"))
                 .andExpect(status().isOk())
@@ -95,8 +95,8 @@ class TransactionControllerTest {
 
     @Test
     void getTransactionsByCustomer_customerNotFound_returns404() throws Exception {
-        when(transactionService.getTransactionsByCustomer(99))
-                .thenThrow(new ResourceNotFoundException("Customer", "id", 99));
+        when(transactionService.getTransactionsByCustomer(99L))
+                .thenThrow(new ResourceNotFoundException("Customer", "id", 99L));
 
         mockMvc.perform(get("/api/v1/transactions/customer/99"))
                 .andExpect(status().isNotFound())

@@ -43,26 +43,26 @@ class RewardServiceImplTest {
     @BeforeEach
     void setUp() {
         customer = new Customer();
-        customer.setId(1);
+        customer.setId(1L);
         customer.setName("Clark");
         customer.setEmail("clark@gmail.com");
     }
 
     @Test
     void getRewardPoints_customerNotFound() {
-        when(customerRepository.findById(99)).thenReturn(Optional.empty());
+        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> rewardService.getRewardPointsForCustomer(99));
+                () -> rewardService.getRewardPointsForCustomer(99L));
     }
 
     @Test
     void getRewardPoints_noTransactions() {
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerAndDateRange(any(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
-        RewardResponse response = rewardService.getRewardPointsForCustomer(1);
+        RewardResponse response = rewardService.getRewardPointsForCustomer(1L);
 
         assertEquals(0, response.getTotalRewardPoints());
         assertTrue(response.getMonthlyRewardPoints().isEmpty());
@@ -73,11 +73,11 @@ class RewardServiceImplTest {
         // $120 → 2*(120-100) + 50 = 90 points
         TransactionRecord trans = buildTransaction(new BigDecimal("120.00"), LocalDateTime.now());
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerAndDateRange(any(), any(), any()))
                 .thenReturn(List.of(trans));
 
-        RewardResponse response = rewardService.getRewardPointsForCustomer(1);
+        RewardResponse response = rewardService.getRewardPointsForCustomer(1L);
 
         assertEquals(90, response.getTotalRewardPoints());
     }
@@ -87,11 +87,11 @@ class RewardServiceImplTest {
         // $75 → 75-50 = 25 points
         TransactionRecord trans = buildTransaction(new BigDecimal("75.00"), LocalDateTime.now());
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerAndDateRange(any(), any(), any()))
                 .thenReturn(List.of(trans));
 
-        RewardResponse response = rewardService.getRewardPointsForCustomer(1);
+        RewardResponse response = rewardService.getRewardPointsForCustomer(1L);
 
         assertEquals(25, response.getTotalRewardPoints());
     }
@@ -101,11 +101,11 @@ class RewardServiceImplTest {
         // $45 → 0 points
         TransactionRecord trans = buildTransaction(new BigDecimal("45.00"), LocalDateTime.now());
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerAndDateRange(any(), any(), any()))
                 .thenReturn(List.of(trans));
 
-        RewardResponse response = rewardService.getRewardPointsForCustomer(1);
+        RewardResponse response = rewardService.getRewardPointsForCustomer(1L);
 
         assertEquals(0, response.getTotalRewardPoints());
     }
@@ -118,11 +118,11 @@ class RewardServiceImplTest {
         TransactionRecord may = buildTransaction(new BigDecimal("75.00"),
                 LocalDateTime.of(2026, 5, 10, 9, 0));
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerAndDateRange(any(), any(), any()))
                 .thenReturn(List.of(april, may));
 
-        RewardResponse response = rewardService.getRewardPointsForCustomer(1);
+        RewardResponse response = rewardService.getRewardPointsForCustomer(1L);
 
         assertEquals(115, response.getTotalRewardPoints());
         assertEquals(90, response.getMonthlyRewardPoints().get(Month.APRIL));

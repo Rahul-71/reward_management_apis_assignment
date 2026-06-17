@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 public class TransactionResponse {
 
-    private Integer transactionId;
-    private Integer customerId;
+    private Long transactionId;
+    private Long customerId;
     private String customerName;
     private BigDecimal amount;
     private LocalDateTime transactionDate;
@@ -14,7 +14,7 @@ public class TransactionResponse {
     public TransactionResponse() {
     }
 
-    public TransactionResponse(Integer transactionId, Integer customerId, String customerName,
+    public TransactionResponse(Long transactionId, Long customerId, String customerName,
             BigDecimal amount, LocalDateTime transactionDate) {
         this.transactionId = transactionId;
         this.customerId = customerId;
@@ -23,19 +23,19 @@ public class TransactionResponse {
         this.transactionDate = transactionDate;
     }
 
-    public Integer getTransactionId() {
+    public Long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(Integer transactionId) {
+    public void setTransactionId(Long transactionId) {
         this.transactionId = transactionId;
     }
 
-    public Integer getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Integer customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

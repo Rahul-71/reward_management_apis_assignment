@@ -34,7 +34,7 @@ public class RewardServiceImpl implements RewardService {
     }
 
     @Override
-    public RewardResponse getRewardPointsForCustomer(Integer customerId) {
+    public RewardResponse getRewardPointsForCustomer(Long customerId) {
         log.info("Calculating rewards for customer id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
@@ -45,7 +45,7 @@ public class RewardServiceImpl implements RewardService {
     }
 
     @Override
-    public RewardResponse getRewardPointsForCustomerInRange(Integer customerId, LocalDateTime start, LocalDateTime end) {
+    public RewardResponse getRewardPointsForCustomerInRange(Long customerId, LocalDateTime start, LocalDateTime end) {
         log.info("Calculating rewards for customer id: {} between {} and {}", customerId, start, end);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));

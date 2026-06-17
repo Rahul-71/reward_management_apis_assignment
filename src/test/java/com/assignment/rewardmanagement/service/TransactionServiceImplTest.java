@@ -43,7 +43,7 @@ class TransactionServiceImplTest {
     @BeforeEach
     void setUp() {
         customer = new Customer();
-        customer.setId(1);
+        customer.setId(1L);
         customer.setName("Clark");
         customer.setEmail("clark@gmail.com");
     }
@@ -51,34 +51,34 @@ class TransactionServiceImplTest {
     @Test
     void addTransaction_success() {
         TransactionRequest request = new TransactionRequest();
-        request.setCustomerId(1);
+        request.setCustomerId(1L);
         request.setAmount(new BigDecimal("120.00"));
         request.setTransactionDate(LocalDateTime.now());
 
         TransactionRecord savedRecord = new TransactionRecord();
-        savedRecord.setTransactionId(101);
+        savedRecord.setTransactionId(101L);
         savedRecord.setCustomer(customer);
         savedRecord.setAmount(request.getAmount());
         savedRecord.setTransactionDate(request.getTransactionDate());
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.save(any(TransactionRecord.class))).thenReturn(savedRecord);
 
         TransactionResponse response = transactionService.addTransaction(request);
 
-        assertEquals(101, response.getTransactionId());
-        assertEquals(1, response.getCustomerId());
+        assertEquals(101L, response.getTransactionId());
+        assertEquals(1L, response.getCustomerId());
         assertEquals(new BigDecimal("120.00"), response.getAmount());
     }
 
     @Test
     void addTransaction_customerNotFound() {
         TransactionRequest request = new TransactionRequest();
-        request.setCustomerId(99);
+        request.setCustomerId(99L);
         request.setAmount(new BigDecimal("50.00"));
         request.setTransactionDate(LocalDateTime.now());
 
-        when(customerRepository.findById(99)).thenReturn(Optional.empty());
+        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
                 () -> transactionService.addTransaction(request));
@@ -89,16 +89,16 @@ class TransactionServiceImplTest {
     @Test
     void getTransactionsByCustomer_success() {
         TransactionRecord record = new TransactionRecord();
-        record.setTransactionId(1);
+        record.setTransactionId(1L);
         record.setCustomer(customer);
         record.setAmount(new BigDecimal("75.00"));
         record.setTransactionDate(LocalDateTime.now());
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
         when(transactionRecordRepository.findByCustomerOrderByTransactionDateDesc(customer))
                 .thenReturn(List.of(record));
 
-        List<TransactionResponse> result = transactionService.getTransactionsByCustomer(1);
+        List<TransactionResponse> result = transactionService.getTransactionsByCustomer(1L);
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal("75.00"), result.get(0).getAmount());
@@ -106,9 +106,9 @@ class TransactionServiceImplTest {
 
     @Test
     void getTransactionsByCustomer_customerNotFound() {
-        when(customerRepository.findById(99)).thenReturn(Optional.empty());
+        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> transactionService.getTransactionsByCustomer(99));
+                () -> transactionService.getTransactionsByCustomer(99L));
     }
 }

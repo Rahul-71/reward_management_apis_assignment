@@ -9,11 +9,11 @@ public interface CustomerService {
 
     CustomerResponse createCustomer(CustomerRequest request);
 
-    CustomerResponse getCustomerById(Integer customerId);
+    CustomerResponse getCustomerById(Long customerId);
 
     List<CustomerResponse> getAllCustomers();
 
-    CustomerResponse updateCustomer(Integer customerId, CustomerRequest request);
+    CustomerResponse updateCustomer(Long customerId, CustomerRequest request);
 
-    void deleteCustomer(Integer customerId);
+    void deleteCustomer(Long customerId);
 }

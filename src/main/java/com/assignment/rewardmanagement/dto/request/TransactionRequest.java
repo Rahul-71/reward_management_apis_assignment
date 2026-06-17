@@ -13,7 +13,7 @@ public class TransactionRequest {
 
     @NotNull(message = "Customer ID must not be null")
     @Positive(message = "Customer ID must be a positive integer")
-    private Integer customerId;
+    private Long customerId;
 
     @NotNull(message = "Amount must not be null")
     @DecimalMin(value = "0.01", message = "Amount must be at least 0.01")
@@ -27,11 +27,11 @@ public class TransactionRequest {
     public TransactionRequest() {
     }
 
-    public Integer getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Integer customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

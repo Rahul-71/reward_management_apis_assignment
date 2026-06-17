@@ -39,7 +39,7 @@ class CustomerServiceImplTest {
     @BeforeEach
     void setUp() {
         customer = new Customer();
-        customer.setId(1);
+        customer.setId(1L);
         customer.setName("Clark");
         customer.setEmail("clark@gmail.com");
 
@@ -71,26 +71,26 @@ class CustomerServiceImplTest {
 
     @Test
     void getCustomerById_success() {
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
 
-        CustomerResponse response = customerService.getCustomerById(1);
+        CustomerResponse response = customerService.getCustomerById(1L);
 
-        assertEquals(1, response.getId());
+        assertEquals(1L, response.getId());
         assertEquals("Clark", response.getName());
     }
 
     @Test
     void getCustomerById_notFound() {
-        when(customerRepository.findById(99)).thenReturn(Optional.empty());
+        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> customerService.getCustomerById(99));
+                () -> customerService.getCustomerById(99L));
     }
 
     @Test
     void getAllCustomers_returnsAllCustomers() {
         Customer second = new Customer();
-        second.setId(2);
+        second.setId(2L);
         second.setName("Harry");
         second.setEmail("harry@gmail.com");
 
@@ -103,19 +103,19 @@ class CustomerServiceImplTest {
 
     @Test
     void deleteCustomer_success() {
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
 
-        customerService.deleteCustomer(1);
+        customerService.deleteCustomer(1L);
 
         verify(customerRepository, times(1)).delete(customer);
     }
 
     @Test
     void deleteCustomer_notFound_throwsException() {
-        when(customerRepository.findById(99)).thenReturn(Optional.empty());
+        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> customerService.deleteCustomer(99));
+                () -> customerService.deleteCustomer(99L));
 
         verify(customerRepository, never()).delete(any());
     }

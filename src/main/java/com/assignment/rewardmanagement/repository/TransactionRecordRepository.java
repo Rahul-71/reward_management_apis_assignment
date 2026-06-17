@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.assignment.rewardmanagement.entity.Customer;
 import com.assignment.rewardmanagement.entity.TransactionRecord;
 
-public interface TransactionRecordRepository extends JpaRepository<TransactionRecord, Integer> {
+public interface TransactionRecordRepository extends JpaRepository<TransactionRecord, Long> {
 
     List<TransactionRecord> findByCustomerOrderByTransactionDateDesc(Customer customer);
 

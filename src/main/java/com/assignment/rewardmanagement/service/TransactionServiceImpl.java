@@ -46,7 +46,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponse> getTransactionsByCustomer(Integer customerId) {
+    public List<TransactionResponse> getTransactionsByCustomer(Long customerId) {
         log.info("Fetching transactions for customer id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));

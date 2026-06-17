@@ -9,5 +9,5 @@ public interface TransactionService {
 
     TransactionResponse addTransaction(TransactionRequest request);
 
-    List<TransactionResponse> getTransactionsByCustomer(Integer customerId);
+    List<TransactionResponse> getTransactionsByCustomer(Long customerId);
 }

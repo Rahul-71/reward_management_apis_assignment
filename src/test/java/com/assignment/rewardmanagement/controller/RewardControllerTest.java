@@ -31,8 +31,8 @@ class RewardControllerTest {
 
     @Test
     void getAllCustomerRewards_returns200() throws Exception {
-        RewardResponse r1 = new RewardResponse(1, "Clark", Map.of(Month.APRIL, 90), 90);
-        RewardResponse r2 = new RewardResponse(2, "Harry", Map.of(), 0);
+        RewardResponse r1 = new RewardResponse(1L, "Clark", Map.of(Month.APRIL, 90), 90);
+        RewardResponse r2 = new RewardResponse(2L, "Harry", Map.of(), 0);
         when(rewardService.getAllCustomerRewards()).thenReturn(List.of(r1, r2));
 
         mockMvc.perform(get("/api/v1/rewards"))
@@ -42,8 +42,8 @@ class RewardControllerTest {
 
     @Test
     void getRewardPoints_noDateParams_returns200() throws Exception {
-        RewardResponse response = new RewardResponse(1, "Clark", Map.of(Month.APRIL, 90), 90);
-        when(rewardService.getRewardPointsForCustomer(1)).thenReturn(response);
+        RewardResponse response = new RewardResponse(1L, "Clark", Map.of(Month.APRIL, 90), 90);
+        when(rewardService.getRewardPointsForCustomer(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/rewards/1"))
                 .andExpect(status().isOk())
@@ -53,8 +53,8 @@ class RewardControllerTest {
 
     @Test
     void getRewardPoints_withDateRange_returns200() throws Exception {
-        RewardResponse response = new RewardResponse(1, "Clark", Map.of(Month.APRIL, 90), 90);
-        when(rewardService.getRewardPointsForCustomerInRange(eq(1), any(), any())).thenReturn(response);
+        RewardResponse response = new RewardResponse(1L, "Clark", Map.of(Month.APRIL, 90), 90);
+        when(rewardService.getRewardPointsForCustomerInRange(eq(1L), any(), any())).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/rewards/1")
                 .param("startDate", "2026-04-01")
@@ -80,8 +80,8 @@ class RewardControllerTest {
 
     @Test
     void getRewardPoints_customerNotFound_returns404() throws Exception {
-        when(rewardService.getRewardPointsForCustomer(99))
-                .thenThrow(new ResourceNotFoundException("Customer", "id", 99));
+        when(rewardService.getRewardPointsForCustomer(99L))
+                .thenThrow(new ResourceNotFoundException("Customer", "id", 99L));
 
         mockMvc.perform(get("/api/v1/rewards/99"))
                 .andExpect(status().isNotFound())

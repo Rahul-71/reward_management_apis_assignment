@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class RewardResponse {
 
-    private Integer customerId;
+    private Long customerId;
     private String customerName;
     private Map<Month, Integer> monthlyRewardPoints;
     private int totalRewardPoints;
@@ -13,7 +13,7 @@ public class RewardResponse {
     public RewardResponse() {
     }
 
-    public RewardResponse(Integer customerId, String customerName,
+    public RewardResponse(Long customerId, String customerName,
             Map<Month, Integer> monthlyRewardPoints, int totalRewardPoints) {
         this.customerId = customerId;
         this.customerName = customerName;
@@ -21,11 +21,11 @@ public class RewardResponse {
         this.totalRewardPoints = totalRewardPoints;
     }
 
-    public Integer getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Integer customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 

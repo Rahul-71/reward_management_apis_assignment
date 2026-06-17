@@ -33,7 +33,7 @@ class CustomerControllerTest {
 
     @Test
     void createCustomer_validRequest_returns201() throws Exception {
-        CustomerResponse response = new CustomerResponse(1, "Clark", "clark@gmail.com");
+        CustomerResponse response = new CustomerResponse(1L, "Clark", "clark@gmail.com");
         when(customerService.createCustomer(any())).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/customers")
@@ -80,8 +80,8 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerById_exists_returns200() throws Exception {
-        CustomerResponse response = new CustomerResponse(1, "Clark", "clark@gmail.com");
-        when(customerService.getCustomerById(1)).thenReturn(response);
+        CustomerResponse response = new CustomerResponse(1L, "Clark", "clark@gmail.com");
+        when(customerService.getCustomerById(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/customers/1"))
                 .andExpect(status().isOk())
@@ -91,8 +91,8 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerById_notFound_returns404() throws Exception {
-        when(customerService.getCustomerById(99))
-                .thenThrow(new ResourceNotFoundException("Customer", "id", 99));
+        when(customerService.getCustomerById(99L))
+                .thenThrow(new ResourceNotFoundException("Customer", "id", 99L));
 
         mockMvc.perform(get("/api/v1/customers/99"))
                 .andExpect(status().isNotFound())
@@ -102,8 +102,8 @@ class CustomerControllerTest {
     @Test
     void getAllCustomers_returns200() throws Exception {
         List<CustomerResponse> customers = List.of(
-                new CustomerResponse(1, "Clark", "clark@gmail.com"),
-                new CustomerResponse(2, "Harry", "harry@gmail.com")
+                new CustomerResponse(1L, "Clark", "clark@gmail.com"),
+                new CustomerResponse(2L, "Harry", "harry@gmail.com")
         );
         when(customerService.getAllCustomers()).thenReturn(customers);
 
