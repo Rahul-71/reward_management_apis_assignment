@@ -6,12 +6,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.assignment.rewardmanagement.dto.response.RewardResponse;
 import com.assignment.rewardmanagement.service.RewardService;
@@ -35,19 +37,19 @@ public class RewardController {
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<?> getRewardPoints(
-            @PathVariable Integer customerId,
+    public ResponseEntity<RewardResponse> getRewardPoints(
+            @PathVariable Long customerId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         log.info("GET /rewards/{} startDate={} endDate={}", customerId, startDate, endDate);
 
         if ((startDate == null && endDate != null) || (startDate != null && endDate == null)) {
-            return ResponseEntity.badRequest().body("Both startDate and endDate must be provided together");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both startDate and endDate must be provided together");
         }
 
         if (startDate != null && startDate.isAfter(endDate)) {
-            return ResponseEntity.badRequest().body("startDate must not be after endDate");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startDate must not be after endDate");
         }
 
         if (startDate != null && endDate != null) {
