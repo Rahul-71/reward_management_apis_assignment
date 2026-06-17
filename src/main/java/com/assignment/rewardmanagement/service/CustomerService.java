@@ -1,9 +1,9 @@
 package com.assignment.rewardmanagement.service;
 
+import java.util.List;
+
 import com.assignment.rewardmanagement.dto.request.CustomerRequest;
 import com.assignment.rewardmanagement.dto.response.CustomerResponse;
-
-import java.util.List;
 
 public interface CustomerService {
 

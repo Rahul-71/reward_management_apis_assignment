@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.assignment.rewardmanagement.dto.response.RewardResponse;
 import com.assignment.rewardmanagement.entity.Customer;
 import com.assignment.rewardmanagement.entity.TransactionRecord;
+import com.assignment.rewardmanagement.exception.ResourceNotFoundException;
 import com.assignment.rewardmanagement.repository.CustomerRepository;
 import com.assignment.rewardmanagement.repository.TransactionRecordRepository;
 
@@ -27,7 +28,7 @@ public class RewardServiceImpl implements RewardService {
     private final TransactionRecordRepository transactionRecordRepository;
 
     public RewardServiceImpl(CustomerRepository customerRepository,
-                             TransactionRecordRepository transactionRecordRepository) {
+            TransactionRecordRepository transactionRecordRepository) {
         this.customerRepository = customerRepository;
         this.transactionRecordRepository = transactionRecordRepository;
     }
@@ -36,7 +37,7 @@ public class RewardServiceImpl implements RewardService {
     public RewardResponse getRewardPointsForCustomer(Integer customerId) {
         log.info("Calculating rewards for customer id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
 
         LocalDateTime end = LocalDateTime.now();
         LocalDateTime start = end.minusMonths(3);
@@ -47,7 +48,7 @@ public class RewardServiceImpl implements RewardService {
     public RewardResponse getRewardPointsForCustomerInRange(Integer customerId, LocalDateTime start, LocalDateTime end) {
         log.info("Calculating rewards for customer id: {} between {} and {}", customerId, start, end);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
 
         return buildRewardResponse(customer, start, end);
     }
@@ -65,8 +66,8 @@ public class RewardServiceImpl implements RewardService {
     }
 
     private RewardResponse buildRewardResponse(Customer customer, LocalDateTime start, LocalDateTime end) {
-        List<TransactionRecord> transactions =
-                transactionRecordRepository.findByCustomerAndDateRange(customer, start, end);
+        List<TransactionRecord> transactions
+                = transactionRecordRepository.findByCustomerAndDateRange(customer, start, end);
 
         Map<Month, Integer> monthlyPoints = new LinkedHashMap<>();
         for (TransactionRecord transaction : transactions) {
@@ -88,7 +89,7 @@ public class RewardServiceImpl implements RewardService {
     A customer receives 2 points for every dollar spent over $100 in each transaction, 
     plus 1 point for every dollar spent between $50 and $100 in each transaction.
     (e.g. a $120 purchase = 2x$20 + 1x$50 = 90 points).
-     */    
+     */
     private int calculateRewards(BigDecimal amount) {
         BigDecimal fifty = new BigDecimal("50");
         BigDecimal hundred = new BigDecimal("100");

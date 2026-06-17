@@ -11,6 +11,7 @@ import com.assignment.rewardmanagement.dto.request.TransactionRequest;
 import com.assignment.rewardmanagement.dto.response.TransactionResponse;
 import com.assignment.rewardmanagement.entity.Customer;
 import com.assignment.rewardmanagement.entity.TransactionRecord;
+import com.assignment.rewardmanagement.exception.ResourceNotFoundException;
 import com.assignment.rewardmanagement.repository.CustomerRepository;
 import com.assignment.rewardmanagement.repository.TransactionRecordRepository;
 
@@ -32,7 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionResponse addTransaction(TransactionRequest request) {
         log.info("Adding transaction for customer id: {}", request.getCustomerId());
         Customer customer = customerRepository.findById(request.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + request.getCustomerId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", request.getCustomerId()));
 
         TransactionRecord record = new TransactionRecord();
         record.setCustomer(customer);
@@ -48,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
     public List<TransactionResponse> getTransactionsByCustomer(Integer customerId) {
         log.info("Fetching transactions for customer id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
 
         return transactionRecordRepository.findByCustomerOrderByTransactionDateDesc(customer)
                 .stream()

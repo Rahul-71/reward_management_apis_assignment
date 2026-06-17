@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.assignment.rewardmanagement.dto.request.CustomerRequest;
 import com.assignment.rewardmanagement.dto.response.CustomerResponse;
 import com.assignment.rewardmanagement.entity.Customer;
+import com.assignment.rewardmanagement.exception.DuplicateResourceException;
+import com.assignment.rewardmanagement.exception.ResourceNotFoundException;
 import com.assignment.rewardmanagement.repository.CustomerRepository;
 
 @Service
@@ -27,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse createCustomer(CustomerRequest request) {
         log.info("Creating customer with email: {}", request.getEmail());
         if (customerRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Customer already exists with email: " + request.getEmail());
+            throw new DuplicateResourceException("Customer", "email", request.getEmail());
         }
         Customer customer = new Customer();
         customer.setName(request.getName());
@@ -41,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse getCustomerById(Integer customerId) {
         log.info("Fetching customer with id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
         return toResponse(customer);
     }
 
@@ -58,7 +60,14 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse updateCustomer(Integer customerId, CustomerRequest request) {
         log.info("Updating customer with id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
+
+        customerRepository.findByEmail(request.getEmail())
+                .filter(existing -> !existing.getId().equals(customerId))
+                .ifPresent(existing -> {
+                    throw new DuplicateResourceException("Customer", "email", request.getEmail());
+                });
+
         customer.setName(request.getName());
         customer.setEmail(request.getEmail());
         Customer updated = customerRepository.save(customer);
@@ -70,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(Integer customerId) {
         log.info("Deleting customer with id: {}", customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
         customerRepository.delete(customer);
         log.info("Customer deleted with id: {}", customerId);
     }
