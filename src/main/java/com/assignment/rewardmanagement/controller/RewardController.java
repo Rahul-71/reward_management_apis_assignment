@@ -50,7 +50,7 @@ public class RewardController {
             return ResponseEntity.badRequest().body("startDate must not be after endDate");
         }
 
-        if (startDate != null) {
+        if (startDate != null && endDate != null) {
             return ResponseEntity.ok(rewardService.getRewardPointsForCustomerInRange(
                     customerId,
                     startDate.atStartOfDay(),
